@@ -1,0 +1,8 @@
+<div class="w-full">
+  <div class="home-container flex">
+    <app-sidebar (state)="resize($event)"></app-sidebar>
+    <div class="w-full" [ngClass]="state ? 'content-expanded' : 'content-minimized'">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
