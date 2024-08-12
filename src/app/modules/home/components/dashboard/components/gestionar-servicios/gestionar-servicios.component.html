@@ -1,0 +1,83 @@
+<div class="w-full px-4">
+  <div class="w-full shadow-4 border-round-xl mt-4">
+    <div class="w-full header bg-primary-hyd py-3 border-round-top-xl color-blanco flex justify-content-between px-4">
+      <span class="text-4xl font-bold">Gestionar Servicios</span>
+      <i class="pi pi-plus text-4xl cursor-pointer" (click)="showModalCrear()"></i>
+    </div>
+    <div class="px-4 mt-4">
+      <div class="flex justify-content-between">
+        <span class="text-xl font-bold">Filtros</span>
+      </div>
+      <form [formGroup]="filterForm" class="grid grid-nogutter mt-4 col-12">
+        <div class="flex col-6 gap-4 flex-col">
+          <div>
+            <label for="float-input" class="mb-2">Nombre</label>
+            <input id="float-input" type="text" pInputText formControlName="name" class="w-full"/>
+          </div>
+        </div>
+        <div class="flex col-6 gap-4 justify-content-end mt-5">
+          <p-button label="Limpiar" (click)="filterForm.reset()"></p-button>
+          <p-button label="Filtrar" (click)="filterCategoria()"></p-button>
+        </div>
+      </form>
+      <div class="my-4 w-full">
+        <p-table [value]="servicios" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+          [tableStyle]="{ 'min-width': '50rem' }"  [style]="{width:'100%'}"
+          currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords}"
+          [rowsPerPageOptions]="[10, 25, 50]">
+          <ng-template pTemplate="header">
+            <tr>
+              <th scope="col">Nombre</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Precio</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-categoria>
+            <tr>
+              <td>{{ categoria.name }}</td>
+              <td [style.width]="'45%'">{{ categoria.description }}</td>
+              <td>{{ categoria.price | number:'1.2-2' }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr *ngIf="hasFirstFilter">
+              <td [attr.colspan]="6">No hay registros</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog header="Nuevo Servicio" [(visible)]="showModal" [modal]="true" [style]="{ width: '40vw', padding: '0px' }" [draggable]="false"
+  [resizable]="false">
+  <form [formGroup]="servicioForm" class="grid w-full mt-2" errorTailor>
+    <div class="w-full px-4">
+      <div class="mt-2">
+        <label for="nombreModal" class="pb-2">Nombre</label>
+        <input id="nombreModal" type="text" pInputText formControlName="name" class="w-full"/>
+      </div>
+      <div class="mt-4">
+        <label for="descripcionModal" class="pb-2">Descripción</label>
+        <textarea id="descripcionModal" rows="5" cols="30" pInputTextarea formControlName="description" class="w-full"></textarea>
+      </div>
+      <div class="mt-2">
+        <label for="nombreModal" class="pb-2">Precio</label>
+        <input id="nombreModal" type="text" pInputText formControlName="price" class="w-full"/>
+      </div>
+      <div class="mt-4 w-full text-center">
+        <button class="btn-filtros p-2" [ngClass]="servicioForm.invalid ? 'opacity-60' : ''" (click)="saveCategoria()" [disabled]="servicioForm.invalid"><span class="font-bold">Registrar</span></button>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+
+<p-toast></p-toast>
+<p-confirmDialog #cd [style]="{width: '30vw'}">
+  <ng-template pTemplate="footer">
+    <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="cd.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Confirmar" (click)="cd.accept()"></button>
+</ng-template>
+</p-confirmDialog>
